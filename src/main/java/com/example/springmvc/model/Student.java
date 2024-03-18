@@ -6,10 +6,18 @@ import jakarta.persistence.*;
 @Table(name = "student")
 public class Student {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int studid;
     private String  studname;
     private String studdept;
+    public Student(){
+
+    }
+    public Student(int studid,String studname,String studdept){
+        this.studid=studid;
+        this.studname=studname;
+        this.studdept=studdept;
+    }
     public int getStudid() {
         return studid;
     }
