@@ -8,6 +8,7 @@ import org.springframework.web.context.request.WebRequest;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+    //Student with that id not found
     @ExceptionHandler(StudentNotFoundException.class)
     public ResponseEntity<ErrorObject> studentNotFoundException(StudentNotFoundException studentNotFoundException, WebRequest webRequest){
         ErrorObject errorObject = new ErrorObject();

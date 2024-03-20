@@ -41,10 +41,14 @@ public class StudentService {
     //update the details of an existing student by id
     public Student updateExistingStudent(String id, Student student) {
         Optional<Student> s1 = studentRepository.findById(Integer.parseInt(id));
-        s1.get().setStudentName(student.getStudentName());
-        s1.get().setStudentDept(student.getStudentDept());
-        s1.get().setStudentId(student.getStudentId());
-        return studentRepository.save(s1.get());
+        if(s1.isPresent()) {
+            s1.get().setStudentName(student.getStudentName());
+            s1.get().setStudentDept(student.getStudentDept());
+            s1.get().setStudentId(student.getStudentId());
+            return studentRepository.save(s1.get());
+        }
+        else
+            throw new StudentNotFoundException("Student not found with the given id");
     }
 
     //delete the particular student record by id
