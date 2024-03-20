@@ -1,9 +1,12 @@
 package com.example.springmvc.service;
 
+import com.example.springmvc.exception.StudentNotFoundException;
 import com.example.springmvc.model.Student;
 import com.example.springmvc.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 import java.util.Map;
@@ -19,29 +22,29 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
+    public List<Student> findStudentByDept(String dept){ return studentRepository.findByStudentDept(dept);}
+
     //return specific student by id
-    public Optional<Student> getStudentById(String id) {
-        Integer id1 = Integer.parseInt(id);
-        return studentRepository.findById(id1);
+    public Student getStudentById(String id) {
+        Optional<Student> student = studentRepository.findById(Integer.parseInt(id));
+        if(student.isPresent())
+             return student.get();
+        else
+            throw new StudentNotFoundException("Student not found with the given id");
     }
 
     //add new student into the database
-    public Student addNewStudent(Map<String, String> student) {
-        int id = Integer.parseInt(student.get("studid"));
-        String name = student.get("studname");
-        String dept = student.get("studdept");
-        System.out.println(id + " " + name + " " + dept);
-        return studentRepository.save(new Student(id, name, dept));
+    public Student addNewStudent(Student student) {
+        return studentRepository.save(student);
     }
 
     //update the details of an existing student by id
-    public Student updateExistingStudent(String id, Map<String, String> student) {
-        int id1 = Integer.parseInt(id);
-        Optional<Student> s1 = studentRepository.findById(id1);
-        Student c = s1.orElse(new Student());
-        c.setStudname(student.get("studname"));
-        c.setStuddept(student.get("studdept"));
-        return studentRepository.save(c);
+    public Student updateExistingStudent(String id, Student student) {
+        Optional<Student> s1 = studentRepository.findById(Integer.parseInt(id));
+        s1.get().setStudentName(student.getStudentName());
+        s1.get().setStudentDept(student.getStudentDept());
+        s1.get().setStudentId(student.getStudentId());
+        return studentRepository.save(s1.get());
     }
 
     //delete the particular student record by id

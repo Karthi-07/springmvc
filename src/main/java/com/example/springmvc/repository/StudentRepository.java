@@ -15,8 +15,5 @@ import java.util.Optional;
 @Repository
 @Transactional
 public interface StudentRepository extends JpaRepository<Student,Integer>{
- List<Student> findAll();
- Student save(Student s);
- Optional<Student> findById(int id);
-
+  List<Student> findByStudentDept(String dept);
 }
