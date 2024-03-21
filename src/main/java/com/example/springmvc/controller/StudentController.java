@@ -33,7 +33,7 @@ public class StudentController {
    }
    @PutMapping("student/{id}")
     public Student updateStudent(@PathVariable String id,@RequestBody Student student){
-      return studentService.updateExistingStudent(id,student);
+      return studentService.updateStudentById(Integer.parseInt(id),student);
    }
    @DeleteMapping("student/{id}")
     public void deleteStudent(@PathVariable String id){

@@ -16,4 +16,5 @@ import java.util.Optional;
 @Transactional
 public interface StudentRepository extends JpaRepository<Student,Integer>{
   List<Student> findByStudentDept(String dept);
+
 }

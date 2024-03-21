@@ -39,8 +39,8 @@ public class StudentService {
     }
 
     //update the details of an existing student by id
-    public Student updateExistingStudent(String id, Student student) {
-        Optional<Student> s1 = studentRepository.findById(Integer.parseInt(id));
+    public Student updateStudentById(int id, Student student) {
+        Optional<Student> s1 = studentRepository.findById(id);
         if(s1.isPresent()) {
             s1.get().setStudentName(student.getStudentName());
             s1.get().setStudentDept(student.getStudentDept());
