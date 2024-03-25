@@ -30,7 +30,7 @@ public class StudentService {
         if(student.isPresent())
              return student.get();
         else
-            throw new StudentNotFoundException("Student not found with the given id");
+            throw new StudentNotFoundException("Student not found with the given id for getting");
     }
 
     //add new student into the database
@@ -48,11 +48,15 @@ public class StudentService {
             return studentRepository.save(s1.get());
         }
         else
-            throw new StudentNotFoundException("Student not found with the given id");
+            throw new StudentNotFoundException("Student not found with the given id for update");
     }
 
     //delete the particular student record by id
     public void deleteStudentById(String id){
-        studentRepository.deleteById(Integer.parseInt(id));
+        Optional<Student> student = studentRepository.findById(Integer.parseInt(id));
+        if(student.isPresent())
+             studentRepository.deleteById(Integer.parseInt(id));
+        else
+            throw new StudentNotFoundException("With that given id student is not present for delete");
     }
 }
