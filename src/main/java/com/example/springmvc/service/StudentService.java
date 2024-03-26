@@ -25,12 +25,12 @@ public class StudentService {
     public List<Student> findStudentByDept(String dept){ return studentRepository.findByStudentDept(dept);}
 
     //return specific student by id
-    public Student getStudentById(String id) {
-        Optional<Student> student = studentRepository.findById(Integer.parseInt(id));
+    public Student getStudentById(int id) {
+        Optional<Student> student = studentRepository.findById(id);
         if(student.isPresent())
              return student.get();
         else
-            throw new StudentNotFoundException("Student not found with the given id");
+            throw new StudentNotFoundException("Student not found with the given id for getting");
     }
 
     //add new student into the database
@@ -39,20 +39,16 @@ public class StudentService {
     }
 
     //update the details of an existing student by id
-    public Student updateExistingStudent(String id, Student student) {
-        Optional<Student> s1 = studentRepository.findById(Integer.parseInt(id));
-        if(s1.isPresent()) {
-            s1.get().setStudentName(student.getStudentName());
-            s1.get().setStudentDept(student.getStudentDept());
-            s1.get().setStudentId(student.getStudentId());
-            return studentRepository.save(s1.get());
-        }
-        else
-            throw new StudentNotFoundException("Student not found with the given id");
+    public Student updateStudentById(Student student) {
+            return studentRepository.save(student);
     }
 
     //delete the particular student record by id
-    public void deleteStudentById(String id){
-        studentRepository.deleteById(Integer.parseInt(id));
+    public void deleteStudentById(int id){
+        Optional<Student> student = studentRepository.findById(id);
+        if(student.isPresent())
+             studentRepository.deleteById(id);
+        else
+            throw new StudentNotFoundException("With that given id student is not present for delete");
     }
 }

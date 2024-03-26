@@ -9,11 +9,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
+
+@SpringBootTest
 class StudentServiceTest {
 @Mock
 private StudentRepository studentRepository;
@@ -23,8 +28,6 @@ private StudentService studentService;
 public void setup(){
     MockitoAnnotations.openMocks(this);
 }
-
-//get all the students
 @Test
 public void getAllStudents() {
     Student s1 = new Student(14, "Gopal", "ECE");
@@ -32,28 +35,61 @@ public void getAllStudents() {
     List<Student> studentlist = new ArrayList<>();
     studentlist.add(s1);
     studentlist.add(s2);
-    Mockito.when(studentRepository.findAll()).thenReturn(studentlist);
+    when(studentRepository.findAll()).thenReturn(studentlist);
+    List<Student> students = studentService.getAllStudents();
+    Assertions.assertEquals(students.size(), 2);
+    Assertions.assertEquals(students.get(0).getStudentName(),"Gopal");
+    Assertions.assertEquals(students.get(1).getStudentDept(),"CA");
 }
-
 @Test
 public void getStudentById() {
    Student s = new Student(13,"Bala","IT");
-   Mockito.when(studentRepository.findById(13)).thenReturn(Optional.of(s));
-   org.assertj.core.api.Assertions.assertThat(s.getStudentId()).isEqualTo(13);
+   when(studentRepository.findById(13)).thenReturn(Optional.of(s));
+   Student student = studentService.getStudentById(13);
+   org.assertj.core.api.Assertions.assertThat(student.getStudentId()).isEqualTo(13);
    Assertions.assertEquals(s.getStudentDept(),"IT");
 }
-
 @Test
 public void addNewStudent(){
-    //arrange
     Student s = new Student(11,"kiran","MECH");
-    //act
-    Mockito.when(studentRepository.save(s)).thenReturn(s);
-    //assertions
-    Assertions.assertEquals("MECH",s.getStudentDept());
-    Assertions.assertEquals("kiran",s.getStudentName());
+    when(studentRepository.save(s)).thenReturn(s);
+    Student savedStudent = studentService.addNewStudent(s);
+    Assertions.assertEquals("MECH",savedStudent.getStudentDept());
+    Assertions.assertEquals("kiran",savedStudent.getStudentName());
     org.assertj.core.api.Assertions.assertThat(s).isNotNull();
-    org.assertj.core.api.Assertions.assertThat(s.getStudentId()).isGreaterThan(0);
+    org.assertj.core.api.Assertions.assertThat(savedStudent.getStudentId()).isGreaterThan(0);
 }
+@Test
+public void findStudentsByDept(){
+    Student student = new Student(1,"Tamil","CSE");
+    Student student1 = new Student(2,"Renoline","CSE");
+    List<Student> studentList = new ArrayList<>();
+    studentList.add(student);
+    studentList.add(student1);
+    when(studentRepository.findByStudentDept("CSE")).thenReturn(studentList);
+    List<Student> studentList1 = studentService.findStudentByDept("CSE");
+    org.assertj.core.api.Assertions.assertThat(studentList1).isNotNull();
+    Assertions.assertEquals(studentList1.size(),2);
+    Assertions.assertEquals(studentList1.get(0).getStudentName(),"Tamil");
+    Assertions.assertEquals(studentList1.get(1).getStudentName(),"Renoline");
+}
+@Test
+public void updateStudentById(){
+ Student student = new Student(19,"Mahir","CSE");
+ when(studentRepository.save(student)).thenReturn(student);
+ student.setStudentName("Sheik");
+ student.setStudentDept("IT");
+ Student updatedStudent = studentService.updateStudentById(student);
+ org.assertj.core.api.Assertions.assertThat(updatedStudent).isNotNull();
+ Assertions.assertEquals(updatedStudent.getStudentName(),"Sheik");
+ Assertions.assertEquals(updatedStudent.getStudentDept(),"IT");
+}
+@Test
+public void deleteStudentById(){
+    Student s = new Student(1,"Laxmi","IT");
 
+//    studentRepository.deleteById(s.getStudentId());
+//    Optional<Student> deleteStudent = studentRepository.findById(s.getStudentId());
+//    org.assertj.core.api.Assertions.assertThat(deleteStudent).isEmpty();
+}
 }
