@@ -29,7 +29,7 @@ public class StudentController {
   }
    @GetMapping("/{id}")
    public ResponseEntity<Student> getStudent(@PathVariable String id) {
-       Student student = studentService.getStudentById(id);
+       Student student = studentService.getStudentById(Integer.parseInt(id));
        if (student != null) {
            return new ResponseEntity<>(student, HttpStatus.OK);
        } else {
@@ -51,12 +51,12 @@ public class StudentController {
        return new ResponseEntity<>(student,HttpStatus.CREATED);
    }
    @PutMapping("/{id}")
-    public ResponseEntity<Student> updateStudent(@PathVariable String id,@RequestBody Student student){
-       studentService.updateStudentById(Integer.parseInt(id),student);
+    public ResponseEntity<Student> updateStudent(@RequestBody Student student){
+       studentService.updateStudentById(student);
        return new ResponseEntity<>(student,HttpStatus.OK);
    }
    @DeleteMapping("/{id}")
     public void deleteStudent(@PathVariable String id){
-       studentService.deleteStudentById(id);
+       studentService.deleteStudentById(Integer.parseInt(id));
    }
 }
