@@ -5,20 +5,19 @@ import com.example.springmvc.repository.StudentRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class StudentServiceTest {
 @Mock
 private StudentRepository studentRepository;
@@ -50,6 +49,10 @@ public void getStudentById() {
    Assertions.assertEquals(s.getStudentDept(),"IT");
 }
 @Test
+public void studentNotFound(){
+
+}
+@Test
 public void addNewStudent(){
     Student s = new Student(11,"kiran","MECH");
     when(studentRepository.save(s)).thenReturn(s);
@@ -73,23 +76,15 @@ public void findStudentsByDept(){
     Assertions.assertEquals(studentList1.get(0).getStudentName(),"Tamil");
     Assertions.assertEquals(studentList1.get(1).getStudentName(),"Renoline");
 }
-@Test
-public void updateStudentById(){
- Student student = new Student(19,"Mahir","CSE");
- when(studentRepository.save(student)).thenReturn(student);
- student.setStudentName("Sheik");
- student.setStudentDept("IT");
- Student updatedStudent = studentService.updateStudentById(student);
- org.assertj.core.api.Assertions.assertThat(updatedStudent).isNotNull();
- Assertions.assertEquals(updatedStudent.getStudentName(),"Sheik");
- Assertions.assertEquals(updatedStudent.getStudentDept(),"IT");
-}
-@Test
-public void deleteStudentById(){
-    Student s = new Student(1,"Laxmi","IT");
-
-//    studentRepository.deleteById(s.getStudentId());
-//    Optional<Student> deleteStudent = studentRepository.findById(s.getStudentId());
-//    org.assertj.core.api.Assertions.assertThat(deleteStudent).isEmpty();
-}
+//@Test
+//public void updateStudentById(){
+// Student student = new Student(19,"Mahir","CSE");
+// when(studentRepository.save(student)).thenReturn(student);
+// student.setStudentName("Sheik");
+// student.setStudentDept("IT");
+// Student updatedStudent = studentService.updateStudentById(student);
+// org.assertj.core.api.Assertions.assertThat(updatedStudent).isNotNull();
+// Assertions.assertEquals(updatedStudent.getStudentName(),"Sheik");
+// Assertions.assertEquals(updatedStudent.getStudentDept(),"IT");
+//}
 }

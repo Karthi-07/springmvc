@@ -4,17 +4,17 @@ import com.example.springmvc.model.Student;
 import com.example.springmvc.service.StudentService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import java.util.List;
 import java.util.Objects;
 
 import static org.mockito.Mockito.when;
-
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class StudentControllerTest {
 @Mock
 StudentService studentService;
@@ -61,6 +61,13 @@ public void studentIdNotFound(){
     when(studentService.getStudentById(1)).thenReturn(null);
     ResponseEntity<Student> statusResponseEntity = studentController.getStudent("1");
     Assertions.assertEquals(statusResponseEntity.getStatusCode(),HttpStatus.NOT_FOUND);
+    Assertions.assertNull(statusResponseEntity.getBody());
+}
+@Test
+public void deleteStudentById(){
+    when(studentService.deleteStudentById(1)).thenReturn("Successfully deleted");
+    ResponseEntity<HttpStatus> statusResponseEntity = studentController.deleteStudentById("1");
+    Assertions.assertEquals(statusResponseEntity.getStatusCode(),HttpStatus.OK);
     Assertions.assertNull(statusResponseEntity.getBody());
 }
 }
