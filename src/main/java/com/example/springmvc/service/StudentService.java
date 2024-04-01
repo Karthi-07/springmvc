@@ -3,6 +3,7 @@ package com.example.springmvc.service;
 import com.example.springmvc.exception.StudentNotFoundException;
 import com.example.springmvc.model.Student;
 import com.example.springmvc.repository.StudentRepository;
+import com.sun.jdi.request.DuplicateRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -35,19 +36,32 @@ public class StudentService {
 
     //add new student into the database
     public Student addNewStudent(Student student) {
-        return studentRepository.save(student);
+        Optional<Student> student1 = studentRepository.findById(student.getStudentId());
+         if(student1.isPresent()){
+            throw new DuplicateRequestException("The Student ID already exists in the database");
+        }
+        else {
+            return studentRepository.save(student);
+        }
     }
 
     //update the details of an existing student by id
     public Student updateStudentById(Student student) {
-            return studentRepository.save(student);
+        Optional<Student> student1 = studentRepository.findById(student.getStudentId());
+        if(student1.isPresent()){
+            return studentRepository.save(student1.get());
+        }else{
+            throw new StudentNotFoundException("With that given Id student is Not for updating");
+        }
     }
 
     //delete the particular student record by id
-    public void deleteStudentById(int id){
+    public String deleteStudentById(int id) {
         Optional<Student> student = studentRepository.findById(id);
-        if(student.isPresent())
-             studentRepository.deleteById(id);
+        if (student.isPresent()){
+            studentRepository.deleteById(id);
+            return "Successfully deleted";
+        }
         else
             throw new StudentNotFoundException("With that given id student is not present for delete");
     }
