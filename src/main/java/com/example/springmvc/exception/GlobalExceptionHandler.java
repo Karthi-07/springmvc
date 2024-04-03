@@ -17,10 +17,4 @@ public class GlobalExceptionHandler {
         errorObject.setMessage(studentNotFoundException.getMessage());
         return new ResponseEntity<>(errorObject,HttpStatus.NOT_FOUND);
     }
-    @ExceptionHandler(DuplicateRequestException.class)
-    public ResponseEntity<ErrorObject> duplicateRequestException(DuplicateRequestException duplicateRequestException,WebRequest webRequest){
-        errorObject.setStatusCode(HttpStatus.CONFLICT.value());
-        errorObject.setMessage(duplicateRequestException.getMessage());
-        return new ResponseEntity<>(errorObject,HttpStatus.CONFLICT);
-    }
 }

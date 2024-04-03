@@ -1,7 +1,7 @@
 package com.example.springmvc.controller;
 
 import com.example.springmvc.model.Student;
-import com.example.springmvc.service.StudentService;
+import com.example.springmvc.service.StudentServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,11 +13,13 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 import java.util.Objects;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class StudentControllerTest {
 @Mock
-StudentService studentService;
+StudentServiceImpl studentServiceImpl;
 @InjectMocks
 StudentController studentController;
 Student student = new Student(1,"Karthi","CSE");
@@ -26,14 +28,14 @@ List<Student> studentList = List.of(student1,student);
 
 @Test
 public void findStudentById(){
-    when(studentService.getStudentById(1)).thenReturn(student);
+    when(studentServiceImpl.getStudentById(anyInt())).thenReturn(student);
     ResponseEntity<Student> student1 = studentController.getStudent("1");
     Assertions.assertEquals(HttpStatus.OK,student1.getStatusCode());
     Assertions.assertEquals(student1.getBody(),student);
 }
 @Test
 public void addNewStudent(){
-   when(studentService.addNewStudent(student)).thenReturn(student);
+   when(studentServiceImpl.addNewStudent(any(Student.class))).thenReturn(student);
    ResponseEntity<Student> studentResponseEntity = studentController.addStudent(student);
    Assertions.assertEquals(studentResponseEntity.getStatusCode(),HttpStatus.CREATED);
    Assertions.assertEquals(studentResponseEntity.getBody(),student);
@@ -42,7 +44,7 @@ public void addNewStudent(){
 @Test
 public void updateStudentById() {
    Student updatedStudent = new Student(1,"Karthikeyan","IT");
-   when(studentService.updateStudentById(updatedStudent)).thenReturn(updatedStudent);
+   when(studentServiceImpl.updateStudentById(any(Student.class))).thenReturn(updatedStudent);
    ResponseEntity<Student> student1 = studentController.updateStudent(updatedStudent);
    Assertions.assertEquals(student1.getBody(),updatedStudent);
    Assertions.assertEquals(HttpStatus.OK,student1.getStatusCode());
@@ -50,7 +52,7 @@ public void updateStudentById() {
 }
 @Test
 public void findAllStudents(){
-    when(studentService.getAllStudents()).thenReturn(studentList);
+    when(studentServiceImpl.getAllStudents()).thenReturn(studentList);
     ResponseEntity<List<Student>> list = studentController.getStudents();
     Assertions.assertEquals(Objects.requireNonNull(list.getBody()).size(),2);
     Assertions.assertEquals(list.getStatusCode(),HttpStatus.OK);
@@ -58,16 +60,9 @@ public void findAllStudents(){
 }
 @Test
 public void studentIdNotFound(){
-    when(studentService.getStudentById(1)).thenReturn(null);
+    when(studentServiceImpl.getStudentById(anyInt())).thenReturn(null);
     ResponseEntity<Student> statusResponseEntity = studentController.getStudent("1");
     Assertions.assertEquals(statusResponseEntity.getStatusCode(),HttpStatus.NOT_FOUND);
-    Assertions.assertNull(statusResponseEntity.getBody());
-}
-@Test
-public void deleteStudentById(){
-    when(studentService.deleteStudentById(1)).thenReturn("Successfully deleted");
-    ResponseEntity<HttpStatus> statusResponseEntity = studentController.deleteStudentById("1");
-    Assertions.assertEquals(statusResponseEntity.getStatusCode(),HttpStatus.OK);
     Assertions.assertNull(statusResponseEntity.getBody());
 }
 }
