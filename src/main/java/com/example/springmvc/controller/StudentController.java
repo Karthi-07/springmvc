@@ -56,7 +56,7 @@ public class StudentController {
        return new ResponseEntity<>(student,HttpStatus.OK);
    }
    @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteStudentById(@PathVariable String id){
+    public ResponseEntity<HttpStatus> deleteStudent(@PathVariable String id){
        String value = studentServiceImpl.deleteStudentById(Integer.parseInt(id));
        if(value.equals("Successfully deleted"))
            return new ResponseEntity<>(HttpStatus.OK);
